@@ -318,6 +318,17 @@ function initFirebase(cfg) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(location.search);
+
+  // If the share URL contains an encoded config, save it silently (for students)
+  const cfgParam = p.get('cfg');
+  if (cfgParam) {
+    try {
+      const cfg = JSON.parse(atob(cfgParam));
+      if (cfg.apiKey && cfg.databaseURL) localStorage.setItem('fbConfig', JSON.stringify(cfg));
+    } catch(e) {}
+  }
+
   const cfg = loadConfig();
   if (!cfg) { show('s-config'); return; }
   initFirebase(cfg);
@@ -402,7 +413,9 @@ function render() {
 
 function showShareScreen() {
   document.getElementById('d-roomcode').textContent = room;
-  const url = location.origin + location.pathname + '?room=' + room;
+  const cfg = loadConfig();
+  const cfgParam = cfg ? '&cfg=' + btoa(JSON.stringify(cfg)) : '';
+  const url = location.origin + location.pathname + '?room=' + room + cfgParam;
   document.getElementById('d-url').textContent = url;
   show('s-share');
 }
