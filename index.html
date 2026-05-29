@@ -437,7 +437,7 @@ function updateLobbyStatus() {
 }
 
 function copyURL() {
-  const url = location.origin + location.pathname + '?room=' + room;
+  const url = document.getElementById('d-url').textContent;
   navigator.clipboard.writeText(url).then(() => toast('✅ URL copied!'));
 }
 
